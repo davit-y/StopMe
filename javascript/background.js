@@ -1,21 +1,8 @@
-var state, url, startTime, stopTime, alarmTime;
+var state, curURL, startTime, stopTime, alarmTime;
 var storage = chrome.storage.local;
 
 const ACTIVE = 0, CLOSED = 1;
 
-
-//Site Definition
-function Site (address, properties) {
-    this.address = address;
-    this.properties = properties;
-}
-Site.prototype.getAddres = function () {
-    return this.address;
-};
-
-Site.prototype.getProperties = function () {
-    return this.properties;
-};
 
 //SiteProperties Definition
 function SiteProperties(limit, usedSoFar, limitEnabled) {
@@ -34,18 +21,17 @@ SiteProperties.prototype.getLimitEnabled = function () {
 };
 
 
-
-function afterGetURL(newUrl) {
-    var newCleanUrl = cleanURL(newUrl);
-    log("old: " + url + " new: " + newCleanUrl, LOGIC_LOG);
-    if (url != newCleanUrl) {
-        onUpdateEvent(newCleanUrl);
+function afterGetURL(newURL) {
+    var newCleanURL = cleanURL(newURL);
+    log("old: " + curURL + " new: " + newCleanURL, LOGIC_LOG);
+    if (curURL != newCleanURL) {
+        onUpdateEvent(newCleanURL);
     }
 }
 
-function onUpdateEvent(newUrl) {
+function onUpdateEvent(newURL) {
     persistData();
-    newSite(newUrl);
+    newSite(newURL);
 }
 
 function onTerminationEvent() {
@@ -58,11 +44,12 @@ function persistData() {
     stopTime = new Date().getTime();
 }
 
-function newSite(newUrl) {
-    url = newUrl;
+function newSite(newURL) {
+    curURL = newURL;
     log("new site", LOGIC_LOG);
     state = ACTIVE;
     startTime= new Date().getTime();
+
 }
 
 

@@ -4,7 +4,7 @@ chrome.tabs.onUpdated.addListener(tabOnUpdated);
 function tabOnUpdated(tabId, changeInfo, tab) {
     var newURL = changeInfo.url;
     if (newURL != null && tabId == curTabId) {
-        log("tab updated: - url:" + newURL, EVENT_LOG);
+        log("tab updated: - curUrl:" + newURL, EVENT_LOG);
         setBrowserActive(true);
         afterGetURL(newURL);
     }
@@ -87,7 +87,7 @@ function updateCurTabId() {
     });
 }
 
-// Asynchronous: gets url by tabId
+// Asynchronous: gets curUrl by tabId
 function getTabURL(tabId) {
     chrome.tabs.get(tabId, function (tab) {
         if (tab != null && browserActive) {
@@ -97,14 +97,14 @@ function getTabURL(tabId) {
 }
 
 /*
-// Asynchronous: gets url of active tab
+// Asynchronous: gets curUrl of active tab
 function getCurrentTabUrl() {
     var queryInfo = {
         active: true,
         currentWindow: true
     };
     chrome.tabs.query(queryInfo, function (tabs) {
-        afterGetURL(tabs[0].url);
+        afterGetURL(tabs[0].curUrl);
     });
 }
 */
