@@ -1,7 +1,8 @@
-var state, curURL, startTime, stopTime, timeTillAlarm, timer, curProperties;
-var storage = chrome.storage.local;
+const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, MIN_ACTIVE_TIME = 2;
 
-const ACTIVE = 0, CLOSED = 1, MIN_ACTIVE_TIME = 2;
+var state = CLOSED;
+var curURL, startTime, stopTime, timeTillAlarm, timer, curProperties;
+var storage = chrome.storage.local;
 
 
 //SiteProperties Definition
@@ -39,13 +40,17 @@ function afterGetURL(newURL) {
 
 function onUpdateEvent(newURL) {
     clearTimeout(timer);
-    persistData();
+    if (state == ACTIVE_TRACKING) {
+        persistData();
+    }
     newSite(newURL);
 }
 
 function onTerminationEvent() {
     clearTimeout(timer);
-    persistData();
+    if (state == ACTIVE_TRACKING) {
+        persistData();
+    }
     state = CLOSED;
     curURL = null;
     startTime = null;
@@ -58,7 +63,7 @@ function persistData() {
     stopTime = new Date().getTime();
     var activeTime = Math.round((stopTime - startTime) / 1000);
 
-    if (activeTime > MIN_ACTIVE_TIME && startTime > 0) {
+    if (activeTime > MIN_ACTIVE_TIME) {
         log("persisting data: " + curURL + " :+" + activeTime, LOGIC_LOG);
         persistSite(curURL, new SiteProperties(curProperties.getLimit(),
             curProperties.getUsedSoFar() + activeTime, curProperties.getLimitEnabled()));
@@ -71,28 +76,35 @@ function persistData() {
 function newSite(newURL) {
     curURL = newURL;
     log("new site", LOGIC_LOG);
-    state = ACTIVE;
-    startTime= new Date().getTime();
-    retrieveSite(curURL,updateAlarmTime);
+    state = ACTIVE_STANDBY;
+    startTime = new Date().getTime();
+    retrieveSite(curURL, afterGetProperties);
 }
 
-function updateAlarmTime(properties) {
+function afterGetProperties(properties) {
+    state = ACTIVE_TRACKING;
     curProperties = properties;
-    timeTillAlarm = null;
     if (curProperties.getLimitEnabled()) {
-        timeTillAlarm = curProperties.getLimit() - curProperties.getUsedSoFar();
-        timer = setTimeout(alarm, timeTillAlarm * 1000);
-        log("limit is: " + curProperties.getLimit() +
-            " ,timer in " + timeTillAlarm, LOGIC_LOG);
+        updateAlarmTime();
     }
+}
+
+function updateAlarmTime() {
+    timeTillAlarm = curProperties.getLimit() - curProperties.getUsedSoFar();
+    timer = setTimeout(alarm, timeTillAlarm * 1000);
+    log("limit is: " + curProperties.getLimit() +
+        " ,timer in " + timeTillAlarm, LOGIC_LOG);
 }
 
 function alarm() {
     log("!ALARM!", LOGIC_LOG);
 }
 
+function dailyClear() {
+}
 
-function onPopup () {
+
+function onPopup() {
 }
 
 function onMainBtnClick() {
