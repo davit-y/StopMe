@@ -90,7 +90,7 @@ function updateCurTabId() {
 // Asynchronous: gets curUrl by tabId
 function getTabURL(tabId) {
     chrome.tabs.get(tabId, function (tab) {
-        if (tab != null && browserActive) {
+        if (!chrome.runtime.lastError && tab != null && browserActive) {
             afterGetURL(tab.url);
         }
     })
