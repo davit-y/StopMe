@@ -4,6 +4,7 @@
   "name": "Stop Me",
   "description": "This extension alarms you when you spend more than a customized daily limit on a site.",
   "version": "1.0",
+  "options_page": "options.html",
 
   "browser_action": {
     "default_icon": "images/icon.png",
