@@ -6,8 +6,5 @@ function setLabel (name,text) {
 
 // When popup is opened
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById("main_btn").addEventListener("click", function (){
-        bgPage.onMainBtnClick();
-    });
-    bgPage.onPopup();
+    bgPage.onPopup(document);
 });

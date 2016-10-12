@@ -9,40 +9,49 @@
     <title>Stop Me</title>
     <style>
         html {
-            height: 300px;
             width: 300px;
         }
+
         body {
-            height: 300px;
-            width: 300px;
+
             font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
             font-size: 100%;
-        }
-        #status {
-            /* avoid an excessively wide status text */
-            white-space: pre;
+            line-height: 1;
+
+            text-align: center;
             text-overflow: ellipsis;
             overflow: hidden;
-            max-width: 400px;
+        }
+
+        p {
+        }
+
+        b{
+        }
+
+        h2{
+            font-size: 100%;
         }
     </style>
-
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-     -->
-    <!--<script src="controller.js"></script>-->
     <script src="javascript/popup.js"></script>
 </head>
 <body>
-<div id="status"></div>
-<div id="siteURL"></div>
-<button id="main_btn" type="button">Something</button>
-<div id="time1"></div>
-<div id="time2"></div>
-<div id="timeDiff"></div>
+<div id="section_title">
+    <h1 id="title_stopme">Stop Me</h1>
+</div>
+<div id="section_message">
+    <p id="message_text_start">You've been active on</p>
+    <b id="message_url">URL.com</b>
+    <p id="message_for" hidden="true">for</p>
+    <b id="message_time" hidden="true">1 hour, and 20 minutes</b>
+    <br>
+    <b id="message_disabled" hidden="true">Today's alarm is disabled</b>
+</div>
+<div id="section_input">
+    <h2 id="input_title">Edit Alarm</h2>
+    <p id="input_text_start">Let me know once I reach</p>
+    <button id="input_main_btn" type="button">Create Alarm</button>
+</div>
 </body>
 </html>
 
