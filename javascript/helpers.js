@@ -40,23 +40,12 @@ function log(text, type) {
         console.log(text);
     }
 }
+
 function logMemoryUsed(item) {
     item = item || null;
     storage.getBytesInUse(item, function (bytes) {
         log("Bytes used:" + bytes + " - " +
             ((100 * bytes) / storage.QUOTA_BYTES).toFixed(2) + "%", STORE_LOG);
-    });
-}
-function persistInstallTime() {
-    storage.set({'install_time': new Date()}, function () {
-        log("time stored", STORE_LOG);
-    });
-}
-
-function retrieveInstallTime(callback) {
-    storage.get('install_time', function (result) {
-        log("time installed: " + String(Date(result)), STORE_LOG);
-        callback(new Date(result['install_time']));
     });
 }
 
@@ -66,6 +55,7 @@ function persistSite(url, properties) {
     item[urlKey] = properties;
     storage.set(item, function () {
         log("persisted - " + url + " - " + properties.limit + " - " +
+            properties.limitPercentages + " - " +
             properties.usedSoFar + " - " + properties.limitEnabled, STORE_LOG);
     });
 }
@@ -75,8 +65,11 @@ function retrieveSite(url, callback) {
     storage.get(urlKey, function (result) {
         if (!chrome.runtime.lastError && result[urlKey] != undefined) {
             log("retrieved - " + url + " - " + result[urlKey].limit + " - " +
-                result[urlKey].usedSoFar + " - " + result[urlKey].limitEnabled, STORE_LOG);
-            callback(new SiteProperties(result[urlKey]));
+                result[urlKey].limitPercentages + " - " + result[urlKey].usedSoFar + " - " +
+                result[urlKey].limitEnabled, STORE_LOG);
+            callback(new SiteProperties(result[urlKey].limit,
+                result[urlKey].limitPercentages.split("_"),result[urlKey].usedSoFar,
+                result[urlKey].limitEnabled ));
         }
     });
 }
@@ -109,6 +102,7 @@ function retrieveAll(callback) {
 //log('It took ' + (b - a) + ' ms.');
 
 storage.clear();
-persistSite("developer.chrome.com",new SiteProperties(10,2,true));
-persistSite("translate.google.com",new SiteProperties(11,1,false));
-persist("#reset_time",3);
+persistSite("developer.chrome.com", new SiteProperties(20,"100_50", 2, true));
+persistSite("translate.google.com", new SiteProperties(11,"100", 1, false));
+persist("#reset_time", 3);
+logMemoryUsed();

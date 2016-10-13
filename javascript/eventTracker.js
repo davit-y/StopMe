@@ -95,17 +95,3 @@ function getTabURL(tabId) {
         }
     })
 }
-
-/*
-// Asynchronous: gets curUrl of active tab
-function getCurrentTabUrl() {
-    var queryInfo = {
-        active: true,
-        currentWindow: true
-    };
-    chrome.tabs.query(queryInfo, function (tabs) {
-        afterGetURL(tabs[0].curUrl);
-    });
-}
-*/
-
