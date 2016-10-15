@@ -26,31 +26,57 @@
         p {
         }
 
-        b{
+        b {
         }
 
-        h2{
+        h2 {
             font-size: 100%;
         }
     </style>
     <script src="javascript/popup.js"></script>
 </head>
 <body>
-<div id="section_title">
+<div id="sec_title">
     <h1 id="title_stopme">Stop Me</h1>
 </div>
-<div id="section_message">
-    <p id="message_text_start">You've been active on</p>
-    <b id="message_url">URL.com</b>
-    <p id="message_for" hidden="true">for</p>
-    <b id="message_time" hidden="true">1 hour, and 20 minutes</b>
-    <br>
-    <b id="message_disabled" hidden="true">Today's alarm is disabled</b>
+<div id="sec_msg">
+    <div id="msg_noAlarm">
+        <p>It looks like you don't have any alarms created for</p>
+        <b id="msgNA_url">URL.com</b>
+    </div>
+    <div id="msg_active" hidden>
+        <p>You've been active on</p>
+        <b id="msgA_url">URL.com</b>
+        <p>for </p>
+        <b id="msgA_time">1 hour, and 20 minutes</b>
+    </div>
 </div>
-<div id="section_input">
-    <h2 id="input_title">Edit Alarm</h2>
-    <p id="input_text_start">Let me know once I reach</p>
-    <button id="input_main_btn" type="button">Create Alarm</button>
+<div id="sec_interactive">
+    <div id="int_NA">
+        <button id="intNA_btnCreate" type="button">Create Alarm</button>
+    </div>
+    <div id="int_AInput" hidden>
+        <input id="intNAC_limitMin" type="text" name="limitMin" value="30" maxlength="2">.
+        <label for="intNAC_limitMin">minutes</label>
+        <button id="intNAC_btnSave" type="button">Save</button>
+        <button id="intNAC_btnCancel" type="button">Cancel</button>
+    </div>
+    <div id="int_ADetails" hidden>
+        <p>Limit:</p><p id="intAD_limit">X hours and Y minutes</p>
+        <button id="intAD_btnEdit" type="button">Edit</button>
+        <button id="intAD_btnDisable" type="button">Disable</button>
+    </div>
+    <div id="int_ADisabled" hidden>
+        <p>Looks like you've temporarily disabled this alarm.</p>
+        <button id="intAD_btnEnable" type="button">Enable Alarm</button>
+    </div>
+    <div id="int_DisableOpt" hidden>
+        <p>Temporary Disable does this and that</p>
+        <button id="intDO_btnTemp" type="button">Temporarily Disable</button>
+        <p>Permanent Disable does that and this</p>
+        <button id="intAD_btnPerm" type="button">Permanently Disable</button>
+        <button id="intAD_btnCancel" type="button">Cancel</button>
+    </div>
 </div>
 </body>
 </html>
