@@ -51,9 +51,7 @@ function onTerminationEvent() {
 
 function clearTimersAndPersistData() {
     if (state == ACTIVE_TRACKING) {
-        for (var i = 0; i < curProperties.getLimitPercentages().size; ++i) {
-            clearTimeout(timers[i]);
-        }
+        clearTimeout(timers);
         persistData();
     }
 }
@@ -104,18 +102,4 @@ function updateAlarmTime() {
 
 function alarm() {
     log("!ALARM!", LOGIC_LOG);
-}
-
-
-function onPopup(doc) {
-    doc.getElementById("input_main_btn").addEventListener("click", function () {
-        onMainBtnClick(doc);
-    });
-    log("popup open");
-}
-
-
-function onMainBtnClick(doc) {
-    doc.getElementById("message_text_start").textContent = "hi";
-    doc.getElementById("section_message").setAttribute("hidden", "false");
 }
