@@ -1,7 +1,7 @@
-const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, MIN_ACTIVE_TIME = 2;
+const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, CLOSED_POPUP = 3, MIN_ACTIVE_TIME = 2;
 
-var state = CLOSED;
-var curURL, startTime, stopTime, timers, curProperties;
+var state = CLOSED, popupOpen = false;
+var curURL, urlForPopup, startTime, stopTime, timers, curProperties;
 var storage = chrome.storage.local;
 
 
@@ -43,6 +43,7 @@ function onTerminationEvent() {
     clearTimersAndPersistData();
     state = CLOSED;
     curURL = null;
+    urlForPopup = null;
     startTime = null;
     stopTime = null;
     timers=null;
@@ -73,8 +74,10 @@ function persistData() {
 
 function newSite(newURL) {
     curURL = newURL;
+    urlForPopup = newURL;
     log("new site", LOGIC_LOG);
     state = ACTIVE_STANDBY;
+    popupOpen = false;
     startTime = new Date().getTime();
     retrieveSite(curURL, afterGetProperties);
 }

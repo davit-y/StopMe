@@ -47,7 +47,7 @@ window.setInterval(checkBrowserActive, 1000);
 function checkBrowserActive(){
     try {
         chrome.windows.getCurrent(function (window) {
-            if (!chrome.runtime.lastError) {
+            if (!chrome.runtime.lastError && !popupOpen) {
                 setBrowserActive(window.focused);
             }
         })

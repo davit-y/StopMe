@@ -1,5 +1,13 @@
 function onPopup(doc) {
+    popupOpen = true;
     log("popup open");
+    clearTimersAndPersistData();
+    state = CLOSED_POPUP;
+    curURL = null;
+    startTime = null;
+    stopTime = null;
+    timers=null;
+    curProperties = null;
     listenToButtons(doc);
 }
 
@@ -22,6 +30,7 @@ function onNAC_btnSave(doc) {
 }
 
 function onNAC_btnCancel(doc) {
+    doc.location.reload();
 }
 
 function onAD_btnEdit(doc) {
@@ -40,6 +49,7 @@ function onAD_btnPerm(doc) {
 }
 
 function onAD_btnCancel(doc) {
+    doc.location.reload();
 }
 
 
