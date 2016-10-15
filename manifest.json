@@ -16,6 +16,7 @@
     "storage"
   ],
   "background": {
-    "scripts": ["javascript/background.js", "javascript/eventTracker.js", "javascript/helpers.js"]
+    "scripts": ["javascript/background.js", "javascript/eventTracker.js",
+      "javascript/helpers.js", "javascript/view.js"]
   }
 }
