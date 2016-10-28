@@ -1,7 +1,7 @@
 const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, CLOSED_POPUP = 3, MIN_ACTIVE_TIME = 2;
 
-var state = CLOSED, popupOpen = false;
-var curURL, urlForPopup, startTime, stopTime, timers, curProperties;
+var state = CLOSED, popupOpen = false, timers = [];
+var curURL, startTime, stopTime, curProperties;
 var storage = chrome.storage.local;
 
 
@@ -43,16 +43,17 @@ function onTerminationEvent() {
     clearTimersAndPersistData();
     state = CLOSED;
     curURL = null;
-    urlForPopup = null;
     startTime = null;
     stopTime = null;
-    timers=null;
+    timers = [];
     curProperties = null;
 }
 
 function clearTimersAndPersistData() {
     if (state == ACTIVE_TRACKING) {
-        clearTimeout(timers);
+        while (timers.length >= 1) {
+            clearTimeout(timers.pop());
+        }
         persistData();
     }
 }
@@ -63,9 +64,8 @@ function persistData() {
 
     if (activeTime > MIN_ACTIVE_TIME) {
         log("persisting data: " + curURL + " :+" + activeTime, LOGIC_LOG);
-        persistSite(curURL, new SiteProperties(curProperties.getLimit(),
-            curProperties.getLimitPercentages().join("_"),
-            curProperties.getUsedSoFar() + activeTime, curProperties.getLimitEnabled()));
+        curProperties.usedSoFar = curProperties.getUsedSoFar() + activeTime;
+        persistSite(curURL, curProperties);
     }
     else {
         log("only spent " + activeTime + " sec on site", LOGIC_LOG);
@@ -74,7 +74,6 @@ function persistData() {
 
 function newSite(newURL) {
     curURL = newURL;
-    urlForPopup = newURL;
     log("new site", LOGIC_LOG);
     state = ACTIVE_STANDBY;
     popupOpen = false;
@@ -91,18 +90,22 @@ function afterGetProperties(properties) {
 }
 
 function updateAlarmTime() {
-    for (var i = 0; i < curProperties.getLimitPercentages().length; ++i) {
-        var timeTillAlarm =  Math.round(curProperties.getLimit() *
-            (curProperties.getLimitPercentages()[i]/100) - curProperties.getUsedSoFar());
-        if (timeTillAlarm > 2) {
-            timers = setTimeout(alarm, timeTillAlarm * 1000);
-            log(curProperties.getLimitPercentages()[i] + "% limit is: " +
-                Math.round(curProperties.getLimit() * (curProperties.getLimitPercentages()[i] / 100)) +
-                " ,timer in " + timeTillAlarm, LOGIC_LOG);
-        }
+    var timeTillAlarm = Math.round(curProperties.getLimit() - curProperties.getUsedSoFar());
+    if (timeTillAlarm > 2) {
+        timers.push(setTimeout(alarm, timeTillAlarm * 1000));
+        log("alarm limit is: " + curProperties.getLimit() + " ,timer in " + timeTillAlarm, LOGIC_LOG);
     }
+    curProperties.getLimitPercentages().forEach(function (percent) {
+        var timeTillPercentageAlarm = Math.round(curProperties.getLimit() *
+            (percent / 100) - curProperties.getUsedSoFar());
+        if (timeTillPercentageAlarm > 2) {
+            timers.push(setTimeout(alarm, timeTillPercentageAlarm * 1000));
+            log(percent + "% limit is: " + Math.round(curProperties.getLimit() *
+                    (percent / 100)) + " ,timer in " + timeTillPercentageAlarm, LOGIC_LOG);
+        }
+    });
 }
 
 function alarm() {
-    log("!ALARM!", LOGIC_LOG);
+    log("!ALARM!");
 }
