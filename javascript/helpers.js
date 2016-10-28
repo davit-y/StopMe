@@ -1,5 +1,5 @@
 const EVENT_LOG = 1, LOGIC_LOG = 2, TEMP_LOG = 3, STORE_LOG = 4;
-const logEvents = false, logLogic = true, logTemp = true, logStore = true;
+const logEvents = false, logLogic = false, logTemp = true, logStore = true;
 
 function cleanURL(url) {
     const length = url.length;
@@ -20,6 +20,31 @@ function cleanURL(url) {
         }
     }
     return url.substr(startIndex, finishIndex - startIndex);
+}
+
+function secondsToText(sec) {
+    var minutes = Math.floor((sec/60) % 60);
+    var hours = Math.floor(sec/3600);
+    if (sec == 1) {
+        return "1 second";
+    }
+    else if (sec < 60) {
+        return sec + " seconds";
+    }
+    else if (sec < 120) {
+        return "1 minute";
+    }
+    else if (sec < 3600) {
+        return minutes + " minutes";
+    }
+    else if(sec < 3660) {
+        return "1 hour";
+    }
+    else {
+        var minutesText = minutes + ((minutes == 1) ? " minute" : " minutes");
+        var hoursText = hours + ((hours == 1) ? " hour" : " hours");
+        return hoursText + ", and " + minutesText;
+    }
 }
 
 function log(text, type) {
@@ -49,14 +74,20 @@ function logMemoryUsed(item) {
     });
 }
 
-function persistSite(url, properties) {
+function formatPropertiesForStorage(properties) {
+    return new SiteProperties(properties.getLimit(), properties.getLimitPercentages().join("_"),
+        properties.getUsedSoFar(), properties.getLimitEnabled());
+}
+
+function persistSite(url, properties, callback) {
     var urlKey = "$" + url;
     var item = {};
-    item[urlKey] = properties;
+    item[urlKey] = formatPropertiesForStorage(properties);
     storage.set(item, function () {
         log("persisted - " + url + " - " + properties.limit + " - " +
-            properties.limitPercentages + " - " +
-            properties.usedSoFar + " - " + properties.limitEnabled, STORE_LOG);
+            properties.limitPercentages + " - " + properties.usedSoFar + " - " +
+            properties.limitEnabled, STORE_LOG);
+        typeof callback === 'function' && callback();
     });
 }
 
@@ -70,6 +101,18 @@ function retrieveSite(url, callback) {
             callback(new SiteProperties(result[urlKey].limit,
                 result[urlKey].limitPercentages.split("_"),result[urlKey].usedSoFar,
                 result[urlKey].limitEnabled ));
+        }
+    });
+}
+
+function persistSiteDeletion(url, callback) {
+    var urlKey = "$" + url;
+    storage.remove(urlKey, function () {
+        if (chrome.runtime.lastError) {
+            log("deletion failed - " + url);
+        } else {
+            log("deleted - " + url);
+            callback();
         }
     });
 }
@@ -102,7 +145,7 @@ function retrieveAll(callback) {
 //log('It took ' + (b - a) + ' ms.');
 
 storage.clear();
-persistSite("developer.chrome.com", new SiteProperties(20,"100_50", 2, true));
-persistSite("translate.google.com", new SiteProperties(11,"100", 1, false));
+persistSite("developer.chrome.com", new SiteProperties(10,[50,90], 1, true));
+persistSite("translate.google.com", new SiteProperties(11,[60], 1, false));
 persist("#reset_time", 3);
 logMemoryUsed();
