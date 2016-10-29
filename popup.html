@@ -32,52 +32,80 @@
         h2 {
             font-size: 100%;
         }
+
+        input {
+            max-width: 15px;
+        }
     </style>
     <script src="javascript/popup.js"></script>
 </head>
 <body>
+<div id="debug" hidden>
+    <button id="debug_refresh" type="button">Refresh</button>
+    <button id="debug_misc" type="button">misc</button>
+</div>
 <div id="sec_title">
     <h1 id="title_stopme">Stop Me</h1>
 </div>
 <div id="sec_msg">
-    <div id="msg_noAlarm">
-        <p>It looks like you don't have any alarms created for</p>
-        <b id="msgNA_url">URL.com</b>
+    <div id="msg_noAlarm" hidden>
+        <p>It looks like you don't have any alarms created for<br>
+            <b id="msgNA_url">URL.com</b></p>
     </div>
-    <div id="msg_active" hidden>
-        <p>You've been active on</p>
-        <b id="msgA_url">URL.com</b>
-        <p>for </p>
-        <b id="msgA_time">1 hour, and 20 minutes</b>
+    <div id="msg_newAlarm" hidden>
+        <p>Your new alarm for<br><b id="msgNewA_url">URL.com</b><br>Has been saved!</p>
+        <p>Check back in a bit to see live usage for the site.</p>
+        <p>You'll also be able to edit, or disable the alarm.</p>
+    </div>
+    <div id="msg_usage" hidden>
+        <p>You've been active on<br><b id="msgU_url">URL.com</b><br>
+            for<br><b id="msgU_time">1 hour, and 20 minutes</b></p>
+    </div>
+    <div id="msg_AlarmDeleted" hidden>
+        <p>Your alarm for<br><b id="msgADel_url">URL.com</b><br>Has been deleted.</p>
     </div>
 </div>
 <div id="sec_interactive">
-    <div id="int_NA">
+    <div id="int_NA" hidden>
         <button id="intNA_btnCreate" type="button">Create Alarm</button>
     </div>
     <div id="int_AInput" hidden>
-        <input id="intNAC_limitMin" type="text" name="limitMin" value="30" maxlength="2">.
-        <label for="intNAC_limitMin">minutes</label>
-        <button id="intNAC_btnSave" type="button">Save</button>
-        <button id="intNAC_btnCancel" type="button">Cancel</button>
+        <p>Let me know when I reach</p>
+        <input id="intAI_limitHr" type="text" name="limitHr" value="0" maxlength="2">
+        <label for="intAI_limitHr">hours, </label>
+        <input id="intAI_limitMin" type="text" name="limitMin" value="30" maxlength="2">
+        <label for="intAI_limitMin">minutes</label>
+        <p>and when I'm at
+            <input id="intAI_check1" type="checkbox" name="check1">
+            <input id="intAI_per1" type="text" name="per1" value="50" maxlength="2">
+            <label for="intAI_per1">%, </label>
+            <input id="intAI_check2" type="checkbox" name="check2">
+            <input id="intAI_per2" type="text" name="per2" value="90" maxlength="2">
+            <label for="intAI_per2">%</label>
+        </p>
+        <p id="intAI_validation"></p>
+        <button id="intAI_btnSave" type="button">Save</button>
+        <button id="intAI_btnCancel" type="button">Cancel</button>
     </div>
     <div id="int_ADetails" hidden>
-        <p>Limit:</p><p id="intAD_limit">X hours and Y minutes</p>
+        <p>You have an alarm for when you reach<br>
+            <b id="intAD_limit">X hours and Y minutes</b><br>
+            <span id="intAD_percent">and when you're at
+                <b id="intAD_percentVals">X%, and Y%</b></span></p>
         <button id="intAD_btnEdit" type="button">Edit</button>
         <button id="intAD_btnDisable" type="button">Disable</button>
     </div>
     <div id="int_ADisabled" hidden>
         <p>Looks like you've temporarily disabled this alarm.</p>
-        <button id="intAD_btnEnable" type="button">Enable Alarm</button>
+        <button id="intADis_btnEnable" type="button">Enable Alarm</button>
     </div>
     <div id="int_DisableOpt" hidden>
         <p>Temporary Disable does this and that</p>
         <button id="intDO_btnTemp" type="button">Temporarily Disable</button>
         <p>Permanent Disable does that and this</p>
-        <button id="intAD_btnPerm" type="button">Permanently Disable</button>
-        <button id="intAD_btnCancel" type="button">Cancel</button>
+        <button id="intDO_btnPerm" type="button">Permanently Disable</button>
+        <button id="intDO_btnCancel" type="button">Cancel</button>
     </div>
 </div>
 </body>
 </html>
-
