@@ -1,7 +1,7 @@
 const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, CLOSED_POPUP = 3, MIN_ACTIVE_TIME = 2;
 
 var state = CLOSED, popupOpen = false, timers = [];
-var curURL, startTime, stopTime, curProperties;
+var curURL, startTime, stopTime, curProperties, alarmCount, nextAlarmPercentage;
 var storage = chrome.storage.local;
 
 
@@ -45,6 +45,7 @@ function onTerminationEvent() {
     curURL = null;
     startTime = null;
     stopTime = null;
+    alarmCount = null;
     timers = [];
     curProperties = null;
 }
@@ -84,6 +85,7 @@ function newSite(newURL) {
 function afterGetProperties(properties) {
     state = ACTIVE_TRACKING;
     curProperties = properties;
+    alarmCount = properties.getLimitPercentages().length + 1;
     if (curProperties.getLimitEnabled()) {
         updateAlarmTime();
     }
@@ -94,18 +96,48 @@ function updateAlarmTime() {
     if (timeTillAlarm > 2) {
         timers.push(setTimeout(alarm, timeTillAlarm * 1000));
         log("alarm limit is: " + curProperties.getLimit() + " ,timer in " + timeTillAlarm, LOGIC_LOG);
+        nextAlarmPercentage = 100;
+
+        curProperties.getLimitPercentages().forEach(function (percent) {
+            var timeTillPercentageAlarm = Math.round(curProperties.getLimit() *
+                (percent / 100) - curProperties.getUsedSoFar());
+            if (timeTillPercentageAlarm > 2) {
+                timers.push(setTimeout(alarm, timeTillPercentageAlarm * 1000));
+                log(percent + "% limit is: " + Math.round(curProperties.getLimit() *
+                        (percent / 100)) + " ,timer in " + timeTillPercentageAlarm, LOGIC_LOG);
+                if (nextAlarmPercentage == 100) nextAlarmPercentage = percent;
+            }
+        });
     }
-    curProperties.getLimitPercentages().forEach(function (percent) {
-        var timeTillPercentageAlarm = Math.round(curProperties.getLimit() *
-            (percent / 100) - curProperties.getUsedSoFar());
-        if (timeTillPercentageAlarm > 2) {
-            timers.push(setTimeout(alarm, timeTillPercentageAlarm * 1000));
-            log(percent + "% limit is: " + Math.round(curProperties.getLimit() *
-                    (percent / 100)) + " ,timer in " + timeTillPercentageAlarm, LOGIC_LOG);
-        }
-    });
+
 }
 
 function alarm() {
-    log("!ALARM!");
+    log("!ALARM! " + nextAlarmPercentage);
+    if (nextAlarmPercentage != "100") {
+        var progressAlarm = {
+            type: "progress",
+            title: "Percent Alarm",
+            iconUrl: "images/icon.png",
+            message: "You have reached " + nextAlarmPercentage + "%",
+            progress: parseInt(nextAlarmPercentage)
+        };
+        chrome.notifications.create(nextAlarmPercentage, progressAlarm);
+        for (var i = 0; i < alarmCount; ++i) {
+            if (curProperties.getLimitPercentages()[i] > parseInt(nextAlarmPercentage)) {
+                nextAlarmPercentage = curProperties.getLimitPercentages()[i];
+                break;
+            } else if (i == alarmCount - 1) {
+                nextAlarmPercentage = "100";
+            }
+        }
+    } else {
+        var finalAlarm = {
+            type: "basic",
+            title: "Final Alarm",
+            iconUrl: "images/icon.png",
+            message: "Hey, you've reached your limit for the day!"
+        };
+        chrome.notifications.create("final", finalAlarm);
+    }
 }
