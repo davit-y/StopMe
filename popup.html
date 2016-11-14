@@ -7,105 +7,106 @@
 <html>
 <head>
     <title>Stop Me</title>
-    <style>
-        html {
-            width: 300px;
-        }
-
-        body {
-
-            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-            font-size: 100%;
-            line-height: 1;
-
-            text-align: center;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-
-        p {
-        }
-
-        b {
-        }
-
-        h2 {
-            font-size: 100%;
-        }
-
-        input {
-            max-width: 15px;
-        }
-    </style>
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection"/>
+    <link rel="stylesheet" href="css/popup_style.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="javascript/popup.js"></script>
+    <script type="text/javascript" src="javascript/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="javascript/materialize.js"></script>
 </head>
 <body>
-<div id="debug" hidden>
-    <button id="debug_refresh" type="button">Refresh</button>
-    <button id="debug_misc" type="button">misc</button>
-</div>
-<div id="sec_title">
-    <h1 id="title_stopme">Stop Me</h1>
-</div>
-<div id="sec_msg">
-    <div id="msg_noAlarm" hidden>
-        <p>It looks like you don't have any alarms created for<br>
-            <b id="msgNA_url">URL.com</b></p>
+<nav class="red darken-4" style='height: 80px; background-image: url("images/banner.png")'>
+    <div class="nav-wrapper container">
+        <a id="logo-container" class="brand-logo">Stop Me</a>
     </div>
-    <div id="msg_newAlarm" hidden>
-        <p>Your new alarm for<br><b id="msgNewA_url">URL.com</b><br>Has been saved!</p>
-        <p>Check back in a bit to see live usage for the site.</p>
-        <p>You'll also be able to edit, or disable the alarm.</p>
+</nav>
+<main>
+    <div id="debug" hidden>
+        <button id="debug_refresh" type="button">Refresh</button>
+        <button id="debug_misc" type="button">misc</button>
     </div>
-    <div id="msg_usage" hidden>
-        <p>You've been active on<br><b id="msgU_url">URL.com</b><br>
-            for<br><b id="msgU_time">1 hour, and 20 minutes</b></p>
+    <div id="sec_msg" class="card grey lighten-5">
+        <div id="msg_noAlarm" hidden>
+            <p class="one_liner">No alarms have been created for</p>
+            <span id="msgNA_url" class="url_and_time">URL.com</span>
+        </div>
+        <div id="msg_newAlarm" hidden>
+            <p>Your new alarm for<br><b id="msgNewA_url">URL.com</b><br>Has been saved!
+            <p>Check back in a bit to see live usage for the site.</p>
+            <p>You'll also be able to edit, or disable the alarm.</p>
+        </div>
+        <div id="msg_usage" hidden>
+            <p class="one_liner">You've been active on</p>
+            <span id="msgU_url" class="url_and_time">URL.com</span>
+            <p class="one_liner">for</p>
+            <span id="msgU_time" class="url_and_time">1 hour, and 20 minutes</span>
+        </div>
+        <div id="msg_AlarmDeleted" hidden>
+            <p>Your alarm for<br><b id="msgADel_url">URL.com</b><br>Has been deleted.</p>
+        </div>
     </div>
-    <div id="msg_AlarmDeleted" hidden>
-        <p>Your alarm for<br><b id="msgADel_url">URL.com</b><br>Has been deleted.</p>
-    </div>
-</div>
-<div id="sec_interactive">
-    <div id="int_NA" hidden>
-        <button id="intNA_btnCreate" type="button">Create Alarm</button>
-    </div>
-    <div id="int_AInput" hidden>
-        <p>Let me know when I reach</p>
-        <input id="intAI_limitHr" type="text" name="limitHr" value="0" maxlength="2">
-        <label for="intAI_limitHr">hours, </label>
-        <input id="intAI_limitMin" type="text" name="limitMin" value="30" maxlength="2">
-        <label for="intAI_limitMin">minutes</label>
-        <p>and when I'm at
-            <input id="intAI_check1" type="checkbox" name="check1">
+    <div id="sec_interactive">
+        <div id="int_NA" hidden>
+            <a title="Create Alarm" id="intNA_btnCreate" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">add_alert</i></a>
+        </div>
+        <div id="int_AInput" hidden>
+            <h2>Create Alarm</h2>
+            <input class="main_alarm" id="intAI_limitHr" type="text" name="limitHr" value="0" maxlength="2">
+            <label class="main_alarm" for="intAI_limitHr">hours, and </label>
+            <input class="main_alarm" id="intAI_limitMin" type="text" name="limitMin" value="30" maxlength="2">
+            <label class="main_alarm" for="intAI_limitMin">minutes</label>
+            <br><br>
+            <h3>Additional Alarms</h3>
+            <input type="checkbox" id="intAI_check1"/>
+            <label for="intAI_check1">Additional Alarm 1:</label>
             <input id="intAI_per1" type="text" name="per1" value="50" maxlength="2">
-            <label for="intAI_per1">%, </label>
-            <input id="intAI_check2" type="checkbox" name="check2">
-            <input id="intAI_per2" type="text" name="per2" value="90" maxlength="2">
-            <label for="intAI_per2">%</label>
-        </p>
-        <p id="intAI_validation"></p>
-        <button id="intAI_btnSave" type="button">Save</button>
-        <button id="intAI_btnCancel" type="button">Cancel</button>
+            <label for="intAI_per1">%, </label><br>
+            <input type="checkbox" id="intAI_check2"/>
+            <label for="intAI_check2">Additional Alarm 2:</label>
+            <input id="intAI_per2" type="text" name="per1" value="90" maxlength="2">
+            <label for="intAI_per2">%, </label><br>
+            <p id="intAI_validation"></p>
+            <a title="Back" id="intAI_btnCancel" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">arrow_back</i></a>
+            <a title="Save Alarm" id="intAI_btnSave" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">save</i></a>
+        </div>
+        <div id="int_ADetails" hidden>
+            <p class="one_liner">An alarm is set for</p>
+            <span id="intAD_limit" class="url_and_time">X hours and Y minutes</span><br>
+            <p id="intAD_percent">and at
+                <span id="intAD_percentVals" class="url_and_time">X%, and Y%</span></p>
+            <a title="Edit Alarm" id="intAD_btnEdit" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">edit</i></a>
+            <a title="Disable Alarm" id="intAD_btnDisable" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">delete</i></a>
+        </div>
+        <div id="int_ADisabled" hidden>
+            <p class="one_liner">The alarm is temporarily disabled.</p><br>
+            <a title="Enable Alarm" id="intADis_btnEnable" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">alarm_on</i></a>
+        </div>
+        <div id="int_DisableOpt" class="row" hidden>
+            <div class="col s6">
+                <span class="disable_head">Disable</span>
+                <p class="disable_body">Settings will be saved and usage tracking will continue, but notifications will be disabled.</p>
+                <a title="Disable Alarm" id="intDO_btnTemp" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                    <i class="material-icons">delete</i></a>
+            </div>
+            <div class="col s6">
+                <span class="disable_head">Delete</span>
+                <p class="disable_body">Notification, usage, and alarm settings will be deleted.
+                    It will be as though no alarm was ever created.</p>
+                <a title="Delete Alarm" id="intDO_btnPerm" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                    <i class="material-icons">delete_forever</i></a>
+            </div>
+            <div class="col s12">
+                <a title="Back" id="intDO_btnCancel" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                    <i class="material-icons">arrow_back</i></a>
+            </div>
+        </div>
     </div>
-    <div id="int_ADetails" hidden>
-        <p>You have an alarm for when you reach<br>
-            <b id="intAD_limit">X hours and Y minutes</b><br>
-            <span id="intAD_percent">and when you're at
-                <b id="intAD_percentVals">X%, and Y%</b></span></p>
-        <button id="intAD_btnEdit" type="button">Edit</button>
-        <button id="intAD_btnDisable" type="button">Disable</button>
-    </div>
-    <div id="int_ADisabled" hidden>
-        <p>Looks like you've temporarily disabled this alarm.</p>
-        <button id="intADis_btnEnable" type="button">Enable Alarm</button>
-    </div>
-    <div id="int_DisableOpt" hidden>
-        <p>Temporary Disable does this and that</p>
-        <button id="intDO_btnTemp" type="button">Temporarily Disable</button>
-        <p>Permanent Disable does that and this</p>
-        <button id="intDO_btnPerm" type="button">Permanently Disable</button>
-        <button id="intDO_btnCancel" type="button">Cancel</button>
-    </div>
-</div>
+</main>
 </body>
 </html>

@@ -1,0 +1,99 @@
+html {
+    width: 250px;
+    background-color: #fafafa;
+}
+
+body {
+    font-size: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-size: 14pt;
+    margin: 10px;
+}
+
+h3 {
+    font-size: 12pt;
+    margin: 5px;
+}
+
+input {
+    max-width: 15px;
+}
+
+p {
+    color: #777777;
+}
+
+.url_and_time {
+    color: black;
+    font-size: 12pt;
+}
+
+.one_liner {
+    font-size: 12pt;
+    margin: 0;
+}
+
+#intAI_limitMin, #intAI_limitHr {
+    margin: 0;
+    font-size: 12pt;
+    min-width: 20px;
+}
+
+.main_alarm {
+    font-size: 12pt;
+}
+
+#intAI_per1, #intAI_per2 {
+    margin: 0;
+}
+
+#material-icons {
+    padding: 0;
+}
+
+#sec_interactive {
+    padding-bottom: 10px;
+}
+
+#sec_msg {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+#intAD_percent,#intAD_percentVals {
+    font-size: 12pt;
+    margin-top: 0;
+}
+
+.col.s6{
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+}
+
+.disable_head {
+    font-size: 14pt;
+}
+
+.disable_body {
+    text-align: center;
+    font-size: 10pt;
+    margin: 0 0 8px;
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+.btn-floating {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#logo-container {
+    top: 10px;
+}
