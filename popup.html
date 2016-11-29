@@ -15,7 +15,7 @@
     <script type="text/javascript" src="javascript/materialize.js"></script>
 </head>
 <body>
-<nav class="red darken-4" style='height: 80px; background-image: url("images/banner.png")'>
+<nav id="banner" class="red darken-4" style='height: 80px; background-image: url("images/banner.png")'>
     <div class="nav-wrapper container">
         <a id="logo-container" class="brand-logo">Stop Me</a>
     </div>
@@ -25,7 +25,7 @@
         <button id="debug_refresh" type="button">Refresh</button>
         <button id="debug_misc" type="button">misc</button>
     </div>
-    <div id="sec_msg" class="card grey lighten-5">
+    <div id="sec_msg">
         <div id="msg_noAlarm" hidden>
             <p class="one_liner">No alarms have been created for</p>
             <span id="msgNA_url" class="url_and_time">URL.com</span>
@@ -51,7 +51,7 @@
                 <i class="material-icons">add_alert</i></a>
         </div>
         <div id="int_AInput" hidden>
-            <h2>Create Alarm</h2>
+            <h2>Alarm Settings</h2>
             <input class="main_alarm" id="intAI_limitHr" type="text" name="limitHr" value="0" maxlength="2">
             <label class="main_alarm" for="intAI_limitHr">hours, and </label>
             <input class="main_alarm" id="intAI_limitMin" type="text" name="limitMin" value="30" maxlength="2">
