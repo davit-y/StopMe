@@ -34,6 +34,7 @@ function startWithNoData() {
 function startWithData() {
     updateUsedSoFar();
     popMsgActive();
+    popMsgAlarmDeleted();
     if (pageProperties.getLimitEnabled()) {
         popAlarmDetails();
         showElement("msg_usage");
@@ -88,6 +89,11 @@ function disableElement(id) {
 function popMsgActive() {
     setLabel("msgU_url", pageURL);
     setLabel("msgU_time", bgPage.secondsToText(pageProperties.getUsedSoFar()));
+}
+
+//populate usage message section with data
+function popMsgAlarmDeleted() {
+    setLabel("msgADel_url", pageURL);
 }
 
 //populate alarm details section with data
@@ -231,6 +237,7 @@ function onDO_btnPerm() {
         hideElement("msg_usage");
         hideElement("int_DisableOpt");
         showElement("msg_AlarmDeleted");
+        showElement("int_NA");
     });
 }
 
@@ -305,6 +312,6 @@ function enableDebug() {
         refresh();
     });
     document.getElementById("debug_misc").addEventListener("click", function () {
-        updatePageProperties();
+        bgPage.resetUsage();
     });
 }
