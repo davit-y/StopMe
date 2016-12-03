@@ -3,16 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>StopMe Options</title>
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection"/>
+    <link rel="stylesheet" href="css/option_style.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="javascript/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="javascript/materialize.js"></script>
 </head>
 <body>
-<table id="data_table">
-    <tr>
-        <th>URL</th>
-        <th>Active Today</th>
-        <th>Limit</th>
-        <th>Alarm Enabled</th>
-    </tr>
-</table>
+<nav id="banner" class="red darken-4">
+    <div class="nav-wrapper container">
+        <a id="logo-container" class="brand-logo">Stop Me</a>
+    </div>
+</nav>
+<div id="msg">
+    <p>Some words (Apparently I need more than 209 characters to not get auto deleted)
+        AHEM... Basically: read the title. My friend Ceviche seems to be getting buzz
+        around him because of his interpreting for Yoel Romero post fight. And reddit
+        gets what reddit wants. Who wants an AMA from him? I'll be happy to set it up!
+    </p>
+</div>
+<div id="table">
+    <h2>Alarms:</h2>
+    <table id="data_table" class="highlight">
+        <tr>
+            <th>URL</th>
+            <th>Usage Today</th>
+            <th>Limit</th>
+            <th>Status</th>
+        </tr>
+    </table>
+</div>
+<div id="alarm_buttons">
+    <a class="waves-effect red darken-4 btn">Enable All</a>
+    <a class="waves-effect red darken-4 btn">Disable All</a>
+</div>
 <script src="javascript/options.js"></script>
 </body>
 </html>
