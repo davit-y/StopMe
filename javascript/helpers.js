@@ -1,5 +1,5 @@
 const EVENT_LOG = 1, LOGIC_LOG = 2, TEMP_LOG = 3, STORE_LOG = 4;
-const logEvents = false, logLogic = false, logTemp = true, logStore = true;
+const logEvents = false, logLogic = true, logTemp = true, logStore = true;
 
 function cleanURL(url) {
     const length = url.length;
@@ -23,8 +23,8 @@ function cleanURL(url) {
 }
 
 function secondsToText(sec) {
-    var minutes = Math.floor((sec/60) % 60);
-    var hours = Math.floor(sec/3600);
+    var minutes = Math.floor((sec / 60) % 60);
+    var hours = Math.floor(sec / 3600);
     if (sec == 1) {
         return "1 second";
     }
@@ -37,7 +37,7 @@ function secondsToText(sec) {
     else if (sec < 3600) {
         return minutes + " minutes";
     }
-    else if(sec < 3660) {
+    else if (sec < 3660) {
         return "1 hour";
     }
     else {
@@ -45,6 +45,26 @@ function secondsToText(sec) {
         var hoursText = hours + ((hours == 1) ? " hour" : " hours");
         return hoursText + ", and " + minutesText;
     }
+}
+
+// Returns Date object of the next time a usage reset is supposed to happen
+function getNextResetDate() {
+    var newTime = new Date();
+    newTime.setHours(resetHour, 0, 0);
+    if (newTime.getTime() < Date.now()) {
+        newTime.setDate(newTime.getDate() + 1);
+    }
+    return newTime;
+}
+
+// Returns Date object of the previous time a usage reset should have happened
+function getPrevResetDate() {
+    var newTime = new Date();
+    newTime.setHours(resetHour, 0, 0);
+    if (newTime.getTime() > Date.now()) {
+        newTime.setDate(newTime.getDate() - 1);
+    }
+    return newTime;
 }
 
 function log(text, type) {
@@ -80,9 +100,10 @@ function formatPropertiesForStorage(properties) {
 }
 
 function persistSite(url, properties, callback) {
-    var urlKey = "$" + url;
+    var urlKey = url.charAt(0) == "$" ? url : "$" + url;
     var item = {};
-    item[urlKey] = formatPropertiesForStorage(properties);
+    item[urlKey] = typeof properties.limitPercentages == "string" ?
+        properties : formatPropertiesForStorage(properties);
     storage.set(item, function () {
         log("persisted - " + url + " - " + properties.limit + " - " +
             properties.limitPercentages + " - " + properties.usedSoFar + " - " +
@@ -99,8 +120,8 @@ function retrieveSite(url, callback) {
                 result[urlKey].limitPercentages + " - " + result[urlKey].usedSoFar + " - " +
                 result[urlKey].limitEnabled, STORE_LOG);
             callback(new SiteProperties(result[urlKey].limit,
-                result[urlKey].limitPercentages.split("_"),result[urlKey].usedSoFar,
-                result[urlKey].limitEnabled ));
+                result[urlKey].limitPercentages.split("_"), result[urlKey].usedSoFar,
+                result[urlKey].limitEnabled));
         }
     });
 }
@@ -117,26 +138,69 @@ function persistSiteDeletion(url, callback) {
     });
 }
 
-function persist(key, value) {
+function persist(key, value, callback) {
     var item = {};
     item[key] = value;
     storage.set(item, function () {
         log("stored " + value, STORE_LOG);
+        typeof callback === 'function' && callback();
     });
 }
 
-function retrieve(key) {
+function retrieve(key, callback) {
     storage.get(key, function (result) {
-        log("retrieved " + result[key], STORE_LOG);
+        if (!chrome.runtime.lastError && result[key] != undefined) {
+            log("retrieved " + result[key], STORE_LOG);
+            typeof callback === 'function' && callback(result);
+        } else {
+            log("Couldn't retrieve key:" + key, STORE_LOG);
+        }
     });
 }
 
-function retrieveAll(callback) {
+function retrieveAllSites(callback) {
     storage.get(null, function (result) {
         log("retrieved all", STORE_LOG);
-        callback(result);
+        var allSites = {};
+        var keys = Object.keys(result);
+        for (var i = 0; i < keys.length; ++i) {
+            if (keys[i].charAt(0) == '$') {
+                allSites[keys[i]] = result[keys[i]];
+            }
+        }
+        callback(allSites);
     });
 }
+
+// Re-persists all site data with all UsedSoFar set to 0
+function resetUsage() {
+    log("Resetting usage", LOGIC_LOG);
+    curProperties.usedSoFar = 0;
+    retrieveAllSites(function (allData) {
+        var keys = Object.keys(allData);
+        for (var i = 0; i < keys.length; ++i) {
+            persistSite(keys[i], new SiteProperties(allData[keys[i]].limit,
+                allData[keys[i]].limitPercentages, 0, allData[keys[i]].limitEnabled));
+        }
+    });
+    persist("#timeOfLastReset", Date.now());
+}
+
+function loadTestData() {
+    persistSite("developer.chrome.com", new SiteProperties(12, [50, 75], 1, true));
+    persistSite("translate.google.com", new SiteProperties(11, [60], 1, false));
+    persist("#resetHour", 0);
+    persist("#timeOfLastReset", Date.now());
+}
+
+function onStartUp() {
+    retrieve("#resetHour", function (resetHourObj) {
+        resetHour = 15;
+    });
+}
+onStartUp();
+
+//loadTestData();
 
 // var a = performance.now();
 // persist("s50","somesite.com");
@@ -144,8 +208,3 @@ function retrieveAll(callback) {
 // var b = performance.now();
 //log('It took ' + (b - a) + ' ms.');
 
-storage.clear();
-persistSite("developer.chrome.com", new SiteProperties(10,[50,90], 1, true));
-persistSite("translate.google.com", new SiteProperties(11,[60], 1, false));
-persist("#reset_time", 3);
-logMemoryUsed();

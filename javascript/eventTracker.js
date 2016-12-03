@@ -50,7 +50,7 @@ function checkBrowserActive(){
             if (!chrome.runtime.lastError && !popupOpen) {
                 setBrowserActive(window.focused);
             }
-        })
+        });
     }
     catch (err) {
         setBrowserActive(false);
@@ -95,3 +95,6 @@ function getTabURL(tabId) {
         }
     })
 }
+
+// Asynchronous: Called on app installation or update
+chrome.runtime.onInstalled.addListener(onUpdateOrInstall);

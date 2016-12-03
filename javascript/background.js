@@ -1,9 +1,9 @@
-const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, CLOSED_POPUP = 3, MIN_ACTIVE_TIME = 2;
+const CLOSED = 0, ACTIVE_TRACKING = 1, ACTIVE_STANDBY = 2, CLOSED_POPUP = 3;
+const MIN_ACTIVE_TIME = 2, DEFAULT_RESET_HOUR = 0;
 
-var state = CLOSED, popupOpen = false, timers = [];
-var curURL, startTime, stopTime, curProperties, alarmCount, nextAlarmPercentage;
-var storage = chrome.storage.local;
-
+var state = CLOSED, popupOpen = false;
+var curURL, startTime, stopTime, curProperties, timers = [], alarmCount, nextAlarmPercentage, resetTimer;
+var storage = chrome.storage.local, resetHour;
 
 //SiteProperties Definition
 function SiteProperties(limit, limitPercentages, usedSoFar, limitEnabled) {
@@ -87,6 +87,7 @@ function afterGetProperties(properties) {
     curProperties = properties;
     alarmCount = properties.getLimitPercentages().length + 1;
     if (curProperties.getLimitEnabled()) {
+        retrieve('#timeOfLastReset', updateResetTimer);
         updateAlarmTime();
     }
 }
@@ -139,5 +140,27 @@ function alarm() {
             message: "Hey, you've reached your limit for the day!"
         };
         chrome.notifications.create("final", finalAlarm);
+    }
+}
+
+function updateResetTimer(timeOfLastResetObj) {
+    var timeOfLastReset = timeOfLastResetObj["#timeOfLastReset"];
+    var prevResetTime = getPrevResetDate().getTime();
+    var nextResetTime = getNextResetDate().getTime();
+    if (timeOfLastReset < prevResetTime) {
+        resetUsage();
+    }
+    resetTimer = setTimeout(resetUsage, nextResetTime - Date.now());
+}
+
+function onUpdateOrInstall(value) {
+    if (value.reason == "install") {
+        loadTestData();
+        log("This is a first install.", LOGIC_LOG);
+        resetHour = DEFAULT_RESET_HOUR;
+        persist("#resetHour", resetHour);
+        persist("#timeOfLastReset", Date.now());
+    } else if (value.reason == "update") {
+        log("StopMe has been updated.", LOGIC_LOG);
     }
 }
