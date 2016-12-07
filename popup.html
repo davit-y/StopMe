@@ -31,9 +31,7 @@
             <span id="msgNA_url" class="url_and_time">URL.com</span>
         </div>
         <div id="msg_newAlarm" hidden>
-            <p>Your new alarm for<br><b id="msgNewA_url">URL.com</b><br>Has been saved!
-            <p>Check back in a bit to see live usage for the site.</p>
-            <p>You'll also be able to edit, or disable the alarm.</p>
+            <p>Your alarm for<br><b id="msgNewA_url">URL.com</b><br>Has been saved!
         </div>
         <div id="msg_usage" hidden>
             <p class="one_liner">You've been active on</p>
@@ -42,12 +40,13 @@
             <span id="msgU_time" class="url_and_time">1 hour, and 20 minutes</span>
         </div>
         <div id="msg_AlarmDeleted" hidden>
-            <p>Your alarm for<br><b id="msgADel_url">URL.com</b><br>Has been deleted.</p>
+            <p>Your alarm for<br><b id="msgADel_url">URL.com</b><br>has been deleted.</p>
         </div>
     </div>
     <div id="sec_interactive">
         <div id="int_NA" hidden>
-            <a title="Create Alarm" id="intNA_btnCreate" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+            <a title="Create Alarm" id="intNA_btnCreate"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">add_alert</i></a>
         </div>
         <div id="int_AInput" hidden>
@@ -69,7 +68,8 @@
             <p id="intAI_validation"></p>
             <a title="Back" id="intAI_btnCancel" class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">arrow_back</i></a>
-            <a title="Save Alarm" id="intAI_btnSave" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+            <a title="Save Alarm" id="intAI_btnSave"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">save</i></a>
         </div>
         <div id="int_ADetails" hidden>
@@ -77,34 +77,51 @@
             <span id="intAD_limit" class="url_and_time">X hours and Y minutes</span><br>
             <p id="intAD_percent">and at
                 <span id="intAD_percentVals" class="url_and_time">X%, and Y%</span></p>
-            <a title="Edit Alarm" id="intAD_btnEdit" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+            <a title="Edit Alarm" id="intAD_btnEdit"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">edit</i></a>
-            <a title="Disable Alarm" id="intAD_btnDisable" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+            <a title="Disable Alarm" id="intAD_btnDisable"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">delete</i></a>
+        </div>
+        <div id="int_newAlarm_msg" hidden>
+            <p>Check back in a bit to see live usage for the site and to edit, disable,
+                or delete the alarm.</p>
         </div>
         <div id="int_ADisabled" hidden>
             <p class="one_liner">The alarm is temporarily disabled.</p><br>
-            <a title="Enable Alarm" id="intADis_btnEnable" class="btn-floating btn-medium waves-effect waves-light red darken-4">
+            <a title="Enable Alarm" id="intADis_btnEnable"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
                 <i class="material-icons">alarm_on</i></a>
         </div>
-        <div id="int_DisableOpt" class="row" hidden>
-            <div class="col s6">
-                <span class="disable_head">Disable</span>
-                <p class="disable_body">Settings will be saved and usage tracking will continue, but notifications will be disabled.</p>
-                <a title="Disable Alarm" id="intDO_btnTemp" class="btn-floating btn-medium waves-effect waves-light red darken-4">
-                    <i class="material-icons">delete</i></a>
+        <div id="int_DisableOpt" hidden>
+            <span class="disable_head">Disable</span>
+            <div class="row">
+                <div id="disable_text_dis" class="col s10">
+                    <p class="disable_text">Settings will be saved and usage tracking will continue, but notifications
+                        will be disabled.</p>
+                </div>
+                <div class="col s2">
+                    <a title="Disable Alarm" id="intDO_btnTemp"
+                       class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                        <i class="material-icons">delete</i></a>
+                </div>
             </div>
-            <div class="col s6">
-                <span class="disable_head">Delete</span>
-                <p class="disable_body">Notification, usage, and alarm settings will be deleted.
-                    It will be as though no alarm was ever created.</p>
-                <a title="Delete Alarm" id="intDO_btnPerm" class="btn-floating btn-medium waves-effect waves-light red darken-4">
-                    <i class="material-icons">delete_forever</i></a>
+            <span class="disable_head">Delete</span>
+            <div class="row">
+                <div id="disable_text_perm" class="col s10">
+                    <p class="disable_text">Notification, usage, and alarm settings will be deleted.
+                        No data will be saved for this site.</p>
+                </div>
+                <div class="col s2">
+                    <a title="Delete Alarm" id="intDO_btnPerm"
+                       class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                        <i class="material-icons">delete_forever</i></a>
+                </div>
             </div>
-            <div class="col s12">
-                <a title="Back" id="intDO_btnCancel" class="btn-floating btn-medium waves-effect waves-light red darken-4">
-                    <i class="material-icons">arrow_back</i></a>
-            </div>
+            <a title="Back" id="intDO_btnCancel"
+               class="btn-floating btn-medium waves-effect waves-light red darken-4">
+                <i class="material-icons">arrow_back</i></a>
         </div>
     </div>
 </main>
