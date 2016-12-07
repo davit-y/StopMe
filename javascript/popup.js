@@ -4,7 +4,7 @@ const defaultLimit = 1800, defaultPercentages = [50, 90];
 
 // Triggered when popup is opened
 document.addEventListener('DOMContentLoaded', function () {
-    enableDebug();
+    //enableDebug();
     pageURL = bgPage.curURL;
     pageProperties = bgPage.curProperties;
     startTime = bgPage.startTime;
@@ -91,7 +91,12 @@ function popMsgActive() {
     setLabel("msgU_time", bgPage.secondsToText(pageProperties.getUsedSoFar()));
 }
 
-//populate usage message section with data
+//populate saved alarm message section with data
+function popMsgNewAlarm() {
+    setLabel("msgNewA_url", pageURL);
+}
+
+//populate deletion message section with data
 function popMsgAlarmDeleted() {
     setLabel("msgADel_url", pageURL);
 }
@@ -183,17 +188,19 @@ function onNA_btnCreate() {
 // Button to save a newly created alarm
 function onAI_btnSave() {
     if (isValidInput()) {
+        hideAllElementsInSections();
         if (pageProperties == undefined) {
             pageProperties = new bgPage.SiteProperties(inputLimit, inputPercentages, 0, true);
+            showElement("int_newAlarm_msg");
         } else {
             pageProperties.limit = inputLimit;
             pageProperties.limitPercentages = inputPercentages;
+            popAlarmDetails();
+            showElement("int_ADetails");
         }
-        bgPage.persistSite(pageURL, pageProperties, function () {
-            hideElement("msg_noAlarm");
-            hideElement("int_AInput");
-            showElement("msg_newAlarm");
-        });
+        bgPage.persistSite(pageURL, pageProperties);
+        popMsgNewAlarm();
+        showElement("msg_newAlarm");
     }
 }
 
@@ -286,9 +293,11 @@ function hideAllElementsInSections() {
     hideElement("msg_noAlarm");
     hideElement("msg_newAlarm");
     hideElement("msg_usage");
+    hideElement("msg_AlarmDeleted");
     hideElement("int_NA");
     hideElement("int_AInput");
     hideElement("int_ADetails");
+    hideElement("int_newAlarm_msg");
     hideElement("int_ADisabled");
     hideElement("int_DisableOpt");
 }
