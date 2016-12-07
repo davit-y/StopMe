@@ -8,34 +8,52 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="javascript/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="javascript/materialize.js"></script>
+    <script src="javascript/popup.js"></script>
 </head>
 <body>
-<nav id="banner" class="red darken-4">
-    <div class="nav-wrapper container">
-        <a id="logo-container" class="brand-logo">Stop Me</a>
-    </div>
-</nav>
+<nav id="banner" class="red darken-4">Stop Me</nav>
 <div id="msg">
-    <p>Some words (Apparently I need more than 209 characters to not get auto deleted)
-        AHEM... Basically: read the title. My friend Ceviche seems to be getting buzz
-        around him because of his interpreting for Yoel Romero post fight. And reddit
-        gets what reddit wants. Who wants an AMA from him? I'll be happy to set it up!
-    </p>
+    <div id="msg_no_alarms">
+        <p>Thanks for installing Stop Me!</p>
+        <p>To get started visit a site click the StopMe icon in the extensions
+            section at the top right of your browser to create a daily alarm.</p>
+        <p>Once an alarm is created you will be able to view your usage of that site,
+            and edit, disable, and delete the alarm.</p>
+    </div>
+    <div id="msg_with_alarms" hidden>
+        <p>The alarms section below shows active alarms and allows you to set the time that
+            daily usage is reset back to 0 for all sites.</p>
+    </div>
 </div>
-<div id="table">
-    <h2>Alarms:</h2>
-    <table id="data_table" class="highlight">
-        <tr>
+<h2>Alarms</h2>
+<div id="no_alarm_options">
+    Come back after creating at least one alarm to view alarm options.
+</div>
+<div id="alarm_options" hidden>
+    <div id="table">
+        <table class="highlight">
+            <thead id="tableHead">
             <th>URL</th>
             <th>Usage Today</th>
             <th>Limit</th>
             <th>Status</th>
-        </tr>
-    </table>
-</div>
-<div id="alarm_buttons">
-    <a class="waves-effect red darken-4 btn">Enable All</a>
-    <a class="waves-effect red darken-4 btn">Disable All</a>
+            </thead>
+            <tbody id="table_body"></tbody>
+        </table>
+    </div>
+    <div id="alarm_buttons">
+        <a id="enable_all" class="waves-effect red darken-4 btn">Enable All</a>
+        <a id="disable_all" class="waves-effect red darken-4 btn">Disable All</a>
+    </div>
+    <div id="resetTime">
+        <label for="select_time">Reset daily usage at:</label>
+        <select id="select_time">
+            <option value="0">12:00 AM</option>
+            <option value="2">2:00 AM</option>
+            <option value="4">4:00 AM</option>
+            <option value="6">6:00 AM</option>
+        </select>
+    </div>
 </div>
 <script src="javascript/options.js"></script>
 </body>

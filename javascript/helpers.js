@@ -168,7 +168,7 @@ function retrieveAllSites(callback) {
                 allSites[keys[i]] = result[keys[i]];
             }
         }
-        callback(allSites);
+        typeof callback === 'function' && callback(allSites);
     });
 }
 
@@ -182,8 +182,23 @@ function resetUsage() {
             persistSite(keys[i], new SiteProperties(allData[keys[i]].limit,
                 allData[keys[i]].limitPercentages, 0, allData[keys[i]].limitEnabled));
         }
+
     });
     persist("#timeOfLastReset", Date.now());
+}
+
+//Sets enabled to bool in all saved sites
+function switchAllAlarms(bool, callback) {
+    log("Enabling all alarms", LOGIC_LOG);
+    retrieveAllSites(function (allData) {
+        var keys = Object.keys(allData);
+        var newItems = {};
+        for (var i = 0; i < keys.length; ++i) {
+            newItems[keys[i]] = new SiteProperties(allData[keys[i]].limit,
+                allData[keys[i]].limitPercentages, allData[keys[i]].usedSoFar, bool);
+        }
+        storage.set(newItems,callback);
+    });
 }
 
 function loadTestData() {
@@ -195,7 +210,7 @@ function loadTestData() {
 
 function onStartUp() {
     retrieve("#resetHour", function (resetHourObj) {
-        resetHour = 15;
+        resetHour = resetHourObj["#resetHour"];
     });
 }
 onStartUp();
